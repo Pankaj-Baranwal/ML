@@ -1,0 +1,6 @@
+In the start, get "train_x", "train_y", "test_x", "test_y"
+Change n_classes to number of labels
+Change x placeholder size to size of each input. x = tf.placeholder('float', [None, len(train_x[0])])
+Change the weights parameter of hidden layer 1.
+Modify the iteration in tf.session to have batches of inputs at a time fed into the sess.run()
+Change accuracy.eval to operate on test_x and test_y.

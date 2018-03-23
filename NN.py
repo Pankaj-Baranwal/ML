@@ -47,6 +47,31 @@ def neural_network_model(data):
 
 def train_neural_network(x):
 	prediction = neural_network_model(x)
+
+	'''
+	StackOverflow:
+	tf.nn.softmax produces just the result of applying the softmax function to an input tensor. 
+	The softmax "squishes" the inputs so that sum(input) = 1; it's a way of normalizing. 
+	The shape of output of a softmax is the same as the input - it just normalizes the values. 
+	The outputs of softmax can be interpreted as probabilities.
+
+	In contrast, tf.nn.softmax_cross_entropy_with_logits computes the cross entropy of the result 
+	after applying the softmax function. So, it brings linearity to output.
+	The cross entropy is a summary metric.
+	It sums across the elements. The output of tf.nn.softmax_cross_entropy_with_logits on a shape [2,5] tensor is of shape [2,1] 
+	(the first dimension is treated as the batch)
+
+	If you want to do optimization to minimize the cross entropy, AND you're softmaxing after your last layer, 
+	you should use tf.nn.softmax_cross_entropy_with_logits
+
+	Tensorflow:
+	It computes softmax cross entropy bw logits and labels.
+	It measures the probability error in discrete classification tasks in which the classes are mutually exclusive.
+	So, each input will have one and only one label.
+
+	NOTE: Do not call this op with output of softmax as it performs a softmax on logits internally for efficieny. It might produces incorrect results.
+	logits = unscaled log probabilities.
+	'''
 	cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=prediction, labels=y))
 
 	# AdamOptimzer already has init learning_rate = 0.001
@@ -58,6 +83,7 @@ def train_neural_network(x):
 		for epoch in range(hm_epochs):
 			epoch_loss = 0
 			for _ in range(int(mnist.train.num_examples/batch_size)):
+				# epoch_x = training input data, epoch_y = training input label
 				epoch_x, epoch_y = mnist.train.next_batch(batch_size)
 				_, c = sess.run([optimizer, cost], feed_dict = {x: epoch_x, y: epoch_y})
 				epoch_loss += c
