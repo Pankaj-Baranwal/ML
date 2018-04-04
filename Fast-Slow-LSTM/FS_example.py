@@ -20,6 +20,3 @@ output, final_state = fs_lstm(np.zeros((10, 10), np.float32), init_state)
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     print(sess.run(output).shape)
-
-
-
