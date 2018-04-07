@@ -50,8 +50,10 @@ class PTBModel(object):
         S_size = config.hyper_size
         vocab_size = config.vocab_size
 
+        # embedding is a mapping from discrete objects, such as words, to vectors of real numbers
         emb_init = aux.orthogonal_initializer(1.0)
         with tf.device("/cpu:0"):
+            # embedding will have shape = [vocab_size or number of words in vocabulary x emb_size or length of each vector]
             embedding = tf.get_variable(
                 "embedding", [vocab_size, emb_size], initializer=emb_init, dtype=tf.float32)
             inputs = tf.nn.embedding_lookup(embedding, input_.input_data)
